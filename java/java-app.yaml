@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: java-spring-boot
+spec:
+  selector:
+    app: java-spring-boot
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: java-app
+spec:
+  selector:
+    matchLabels:
+      app: java-spring-boot
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: java-spring-boot
+    spec:
+      containers:
+      - name: java-app
+        image: kuopsme/java-app:1.0
+        ports:
+        - name: http
+          containerPort: 8080

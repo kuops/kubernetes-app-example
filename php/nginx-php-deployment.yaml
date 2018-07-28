@@ -1,0 +1,48 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+  labels:
+    app: nginx-php-fpm
+  name: nginx-php-fpm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-php-fpm
+  template:
+    metadata:
+      labels:
+        app: nginx-php-fpm
+      name: nginx-php-fpm
+    spec:
+      containers:
+      - image: kuopsme/php-app:1.0
+        name: php-fpm
+        volumeMounts:
+        - name: php-app
+          mountPath: /var/www/html
+        lifecycle:
+          postStart:
+            exec:
+              command: ["/bin/sh", "-c", "cp -r /app/. /var/www/html"]
+        ports:
+        - name: php
+          containerPort: 9000
+      - image: nginx
+        name: nginx
+        volumeMounts:
+        - name: php-app
+          mountPath: /var/www/html
+        - name: nginx-conf
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+        ports:
+        - name: http
+          containerPort: 80
+      volumes:
+      - name: php-app
+        emptyDir: {}
+      - name: nginx-conf
+        configMap:
+          name: nginx-conf
