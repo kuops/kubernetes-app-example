@@ -11,3 +11,9 @@ docker push kuopsme/php-app:1.0
 kubectl  create  -f php/
 ```
 
+## 访问
+
+```
+curl nodeip:nodeport/info.php
+curl nodeip:nodeport/test.php
+```
