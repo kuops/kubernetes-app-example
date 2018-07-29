@@ -12,4 +12,3 @@
    $mem->addServer("memcached",11211);
    $mem->set("key1","Hello Memcached!",0); 
    echo $mem->get("key1")."<br/>";
-?> 
